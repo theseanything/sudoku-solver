@@ -1,2 +1,2 @@
 solver:
-	g++ main.cpp -o main
+	g++ grid.cpp -o main
