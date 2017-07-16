@@ -11,10 +11,10 @@ public:
   Grid(int startNums[]){
     grid.resize(9, vector<int>(9, 0));
     int pos;
-    for (int c = 0; c < 9; c++){
-      for (int r = 0; r < 9; r++){
-        pos = r + (c * 9);
-        grid[c][r] = startNums[pos];
+    for (int r = 0; r < 9; r++){
+      for (int c = 0; c < 9; c++){
+        pos = c + (r * 9);
+        grid[r][c] = startNums[pos];
       }
     }
   }
@@ -22,20 +22,10 @@ public:
   ~Grid(){
   }
 
-  /*int** getBlock(int pos){
-    int* block[boardSize];
-    for(int i = 0; i < boardSize; i++){
-      int blockSize =
-      int offset = (pos - 1)
-      block[i] = &board[(i * boardSize) + offset];
-    }
-    return block;
-  }*/
-
   void print(){
-    for(int c = 0; c < 9; c++){
-      for(int r = 0; r < 9; r++){
-        cout << grid[c][r] << " ";
+    for(int r = 0; r < 9; r++){
+      for(int c = 0; c < 9; c++){
+        cout << grid[r][c] << " ";
       }
       cout << endl;
     }
@@ -57,6 +47,21 @@ public:
     cout << endl;
   }
 
+  void printBlock(int b){
+    b--;
+    int rowStart = (b / 3) * 3;
+    int columnStart = (b % 3) * 3;
+
+    int rowEnd = rowStart + 3;
+    int columnEnd = columnStart + 3;
+    for(int r = rowStart; r < rowEnd; r++){
+      for(int c = columnStart; c < columnEnd; c++){
+        cout << grid[r][c] << " ";
+      }
+      cout << endl;
+    }
+  }
+
 };
 
 int main(){
@@ -64,10 +69,8 @@ int main(){
   int sudoku [] = {0,5,6,9,0,7,4,0,0,0,8,1,0,4,0,0,0,0,0,0,0,0,1,5,0,9,0,0,0,0,0,0,3,8,5,7,8,4,0,0,6,0,0,2,3,7,3,9,2,0,0,0,0,0,0,6,0,5,8,0,0,0,0,0,0,0,0,7,0,3,6,0,0,0,8,3,0,6,5,7,0};
 
   Grid grid = Grid(sudoku);
-  cout << "Hello, world" << endl;
-  grid.print();
-  grid.printRow(4);
-  grid.printColumn(4);
 
+  grid.print();
+  grid.prettyPrint()
   return 0;
 }
