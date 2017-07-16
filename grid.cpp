@@ -62,6 +62,72 @@ public:
     }
   }
 
+  bool unusedInRow(int r, int number){
+    for (int c = 0; c < 9; c++){
+      if(grid[r][c] == number){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool unusedInColumn(int c, int number){
+    for (int r = 0; r < 9; r++){
+      if(grid[r][c] == number){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool unusedInBox(int row, int col, int number){
+    int rowStart = row - row % 3;
+    int columnStart = col - col % 3;
+    int rowEnd = rowStart + 3;
+    int columnEnd = columnStart + 3;
+
+    for(int r = rowStart; r < rowEnd; r++){
+      for(int c = columnStart; c < columnEnd; c++){
+        if(grid[r][c] == number){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  bool validAssignment(int r, int c, int number){
+    return unusedInRow(r, number) && unusedInColumn(c, number) && unusedInBox(r, c, number);
+  }
+
+  bool isSolved(int &r, int &c){
+    for(r = 0; r < 9; r++){
+      for(c = 0; c < 9; c++){
+        if(grid[r][c] == 0){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  bool solve(){
+    int row, col;
+    if (isSolved(row, col)){
+      return true;
+    }
+    for (int i = 1; i <=9; i++){
+      if(validAssignment(row, col, i)){
+        grid[row][col] = i;
+        if (solve()){
+          return true;
+        }
+        grid[row][col] = 0;
+      }
+    }
+    return false;
+  }
+
 };
 
 int main(){
@@ -70,7 +136,16 @@ int main(){
 
   Grid grid = Grid(sudoku);
 
-  grid.print();
-  grid.prettyPrint()
+  // grid.print();
+  // if (grid.validAssignment(0,0,7)){
+  //   cout << "true" << endl;
+  // }
+
+  if (grid.solve()){
+    grid.print();
+  } else {
+    cout << "No solution found." << endl;
+  }
+
   return 0;
 }
