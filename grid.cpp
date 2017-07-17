@@ -136,11 +136,6 @@ int main(){
 
   Grid grid = Grid(sudoku);
 
-  // grid.print();
-  // if (grid.validAssignment(0,0,7)){
-  //   cout << "true" << endl;
-  // }
-
   if (grid.solve()){
     grid.print();
   } else {
