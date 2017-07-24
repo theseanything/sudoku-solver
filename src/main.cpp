@@ -8,15 +8,20 @@ void printArray(int* arr, int len){
     cout<<arr[i];
   }
   cout << endl;
+  cout << endl;
+  cout << endl;
 }
 
 int main() {
-  io::CSVReader<2>in("../problems.csv");
+  string filepath;
+  cout << "Select a file to test: ";
+  getline (cin, filepath);
+  io::CSVReader<2>in(filepath);
   in.read_header(io::ignore_extra_column, "quizzes", "solutions");
   std::string q, s;
-  int count = 0;
+  //int count = 0;
   while(in.read_row(q,s)){
-    cout << "\r" << count;
+    //cout << "\r" << count;
     int puzzle[81];
     int solution[81];
     for(std::string::size_type i = 0; i < q.size(); ++i) {
@@ -27,6 +32,7 @@ int main() {
 
     if (grid.solve()) {
       int* solvedGrid = grid.getArray();
+      grid.print();
       for (int i = 0; i < 81; i++){
         if (solution[i] != solvedGrid[i]){
           cout << "WRONG: " << endl;
@@ -40,7 +46,7 @@ int main() {
     } else {
       cout << "No solution found." << endl;
     }
-    count ++;
+    //count ++;
   }
 
   return 0;
