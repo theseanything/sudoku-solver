@@ -1,19 +1,25 @@
+SRCDIR=src
+BUILDDIR =build
+TARGETDIR=bin
 CC=g++
 CFLAGS=-c -Wall -std=c++0x
+LDFLAGS=
+SOURCES=main.cpp grid.cpp csv.cpp
+OBJECTS=$(SOURCES:%.cpp=$(BUILDDIR)/%.o)
 
-all: main
+EXECUTABLE=main
 
-main: main.o grid.o csv.o
-	$(CC) build/main.o build/grid.o -o bin/main
+all: $(EXECUTABLE)
 
-main.o: src/grid.cpp
-	$(CC) $(CFLAGS) src/main.cpp -o build/main.o
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $(TARGETDIR)/$@
 
-grid.o: src/grid.cpp
-	$(CC) $(CFLAGS) src/grid.cpp -o build/grid.o
-
-csv.o: src/csv.h
-	$(CC) $(CFLAGS) src/csv.h -o build/csv.o
+$(OBJECTS): $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	rm build/* bin/*
+	rm $(TARGETDIR)/$(EXECUTABLE) $(OBJECTS)
+.PHONY: clean
+
+print-%:
+	@echo '$*=$($*)'

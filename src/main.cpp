@@ -1,5 +1,5 @@
 #include "grid.hpp"
-#include "csv.h"
+#include "csv.cpp"
 
 #include <stdlib.h>
 
