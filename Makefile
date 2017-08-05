@@ -10,7 +10,7 @@ OBJECTS=$(SOURCES:%.cpp=$(BUILDDIR)/%.o)
 
 EXECUTABLE=main
 
-all: $(EXECUTABLE)
+all: $(BUILDDIR) $(TARGETDIR) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $(TARGETDIR)/$@
@@ -22,6 +22,12 @@ test:
 	$(CC) -std=c++0x $(LDFLAGS) $(TESTLIBS) test/grid_unittests.cpp src/grid.cpp -o test/test
 	test/test
 .PHONY: test
+
+$(BUILDDIR):
+	mkdir -p $(BUILDDIR)
+
+$(TARGETDIR):
+	mkdir -p $(TARGETDIR)
 
 clean:
 	rm $(TARGETDIR)/$(EXECUTABLE) $(OBJECTS)
