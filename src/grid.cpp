@@ -159,30 +159,32 @@ bool Grid::nextEmptyPosition(int &r, int &c) {
   return false;
 }
 
+// Checks if the grid is solved.
 bool Grid::isSolved() {
-    bool numberUsedInRow[9][9];
-    bool numberUsedInColumn[9][9];
-    bool numberUsedInBox[9][9];
-    
-    for (int i = 0; i < 9; i++) {
-        for (int n = 0; n < 9; n++) {
-            numberUsedInRow[i][n] = false;
-            numberUsedInColumn[i][n] = false;
-            numberUsedInBox[i][n] = false;
-        }
+  // Create arrays to represent whether number is used
+  bool numberUsedInRow[9][9];
+  bool numberUsedInColumn[9][9];
+  bool numberUsedInBox[9][9];
+
+  for (int i = 0; i < 9; i++) {
+    for (int n = 0; n < 9; n++) {
+      numberUsedInRow[i][n] = false;
+      numberUsedInColumn[i][n] = false;
+      numberUsedInBox[i][n] = false;
     }
-    
-    
+  }
+
   for (int r = 0; r < 9; r++) {
     for (int c = 0; c < 9; c++) {
       int number = grid[r][c];
-        int b = 
-        if (numberUsedInRow[r][number] && numberUsedInColumn[c][number] && numberUsedInBox[b][number]) {
-            return false;
-        }
-        numberUsedInRow[r][number] = true;
-        numberUsedInColumn[c][number] = true;
-        numberUsedInBox[b][number] = true;
+      int b = c / 3 + (r / 3) * 3;
+      if (numberUsedInRow[r][number] && numberUsedInColumn[c][number] &&
+          numberUsedInBox[b][number]) {
+        return false;
+      }
+      numberUsedInRow[r][number] = true;
+      numberUsedInColumn[c][number] = true;
+      numberUsedInBox[b][number] = true;
     }
   }
   return true;
