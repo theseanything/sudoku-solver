@@ -1,5 +1,5 @@
-#include <vector>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -12,7 +12,7 @@ private:
   bool unusedInBox(int row, int col, int number);
   bool validAssignment(int r, int c, int number);
   bool nextEmptyPosition(int &r, int &c);
-    
+
 public:
   Grid();
   Grid(int numbers[]);
@@ -26,8 +26,7 @@ public:
   void printRow(int r);
   void printBlock(int b);
   string toString();
-  int* getArray();
+  int *getArray();
   bool solve();
   bool isSolved();
-
 };
