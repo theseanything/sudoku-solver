@@ -1,18 +1,23 @@
 #include "grid.hpp"
 
-Grid::Grid(int startNums[]) {
+// Default constructor for initialise a blank sudoku grid
+Grid::Grid() {
   grid.resize(9, vector<int>(9, 0));
-  int pos;
-  for (int r = 0; r < 9; r++) {
-    for (int c = 0; c < 9; c++) {
-      pos = c + (r * 9);
-      grid[r][c] = startNums[pos];
-    }
-  }
+};
+
+// Constructs a sudoku grid based on int array
+Grid::Grid(int numbers[]): Grid() {
+  setGrid(numbers);
+};
+
+// Constructs a sudoku grid based of string of numbers
+Grid::Grid(string numbers): Grid() {
+  setGrid(numbers);
 };
 
 Grid::~Grid() {};
 
+// Prints a 9 x 9 sudoku grid
 void Grid::print() {
   for (int r = 0; r < 9; r++) {
     for (int c = 0; c < 9; c++) {
@@ -24,6 +29,7 @@ void Grid::print() {
 
 }
 
+// Prints numbers in a specified column
 void Grid::printColumn(int c) {
   c--;
   for (int r = 0; r < 9; r++) {
@@ -32,6 +38,7 @@ void Grid::printColumn(int c) {
   cout << endl;
 }
 
+// Prints numbers in a specified row
 void Grid::printRow(int r) {
   r--;
   for (int c = 0; c < 9; c++) {
@@ -40,6 +47,8 @@ void Grid::printRow(int r) {
   cout << endl;
 }
 
+// Prints a 3 x 3 grid of numbers within the specified sudoku block. Blocks are
+// numbered from 1 to 9 starting from the top right moving across each row.
 void Grid::printBlock(int b) {
   b--;
   int rowStart = (b / 3) * 3;
@@ -55,6 +64,7 @@ void Grid::printBlock(int b) {
   }
 }
 
+// Returns the grid a single int array
 int* Grid::getArray() {
   int* array;
   array = new int[81];
@@ -66,6 +76,43 @@ int* Grid::getArray() {
   return array;
 }
 
+// Returns the grid as single string of number characters
+string Grid::toString(){
+  string string (81,'0');
+  for (int r = 0; r < 9; r++) {
+    for (int c = 0; c < 9; c++) {
+        // TODO: Fix conversion from int to char
+      string[c + (r * 9)] = grid[r][c] + '0';
+    }
+  }
+  return string;
+}
+
+
+// Sets the numbers in the grid from a int array, filling each row first.
+void Grid::setGrid(int numbers[]){
+  int pos;
+  for (int r = 0; r < 9; r++) {
+    for (int c = 0; c < 9; c++) {
+      pos = c + (r * 9);
+      grid[r][c] = numbers[pos];
+    }
+  }
+}
+
+// Sets the numbers in the grid from a string of number characters, filling
+// each row first.
+void Grid::setGrid(string numbers){
+  int pos;
+  for (int r = 0; r < 9; r++) {
+    for (int c = 0; c < 9; c++) {
+      pos = c + (r * 9);
+      grid[r][c] = numbers[pos] - '0';
+    }
+  }
+}
+
+// Checks if number is not already within row specified
 bool Grid::unusedInRow(int r, int number) {
   for (int c = 0; c < 9; c++) {
     if (grid[r][c] == number) {
@@ -75,6 +122,7 @@ bool Grid::unusedInRow(int r, int number) {
   return true;
 }
 
+// Checks if number is not already within column specified
 bool Grid::unusedInColumn(int c, int number) {
   for (int r = 0; r < 9; r++) {
     if (grid[r][c] == number) {
@@ -84,6 +132,7 @@ bool Grid::unusedInColumn(int c, int number) {
   return true;
 }
 
+// Checks if number is not already within box specified
 bool Grid::unusedInBox(int row, int col, int number) {
   int rowStart = row - row % 3;
   int columnStart = col - col % 3;
@@ -100,15 +149,30 @@ bool Grid::unusedInBox(int row, int col, int number) {
   return true;
 }
 
+// Checks if a number can be legally placed in position on grid
 bool Grid::validAssignment(int r, int c, int number) {
-  return unusedInRow(r, number) && unusedInColumn(c, number) &&
-         unusedInBox(r, c, number);
+    return unusedInRow(r, number) && unusedInColumn(c, number) && unusedInBox(r, c, number);
 }
 
-bool Grid::isSolved(int &r, int &c) {
+
+// Checks if grid is filled with numbers from 1 to 9
+bool Grid::nextEmptyPosition(int &r, int &c) {
   for (r = 0; r < 9; r++) {
     for (c = 0; c < 9; c++) {
       if (grid[r][c] == 0) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool Grid::isSolved(){
+  for (int r = 0; r < 9; r++) {
+    for (int c = 0; c < 9; c++){
+        int number = grid[r][c];
+      if (!(unusedInRow(r, number) && unusedInColumn(c, number) && unusedInBox(r, c, number)))
+      {
         return false;
       }
     }
@@ -116,18 +180,19 @@ bool Grid::isSolved(int &r, int &c) {
   return true;
 }
 
+// Solves the grid using a brute force backtracking method.
 bool Grid::solve() {
-  int row, col;
-  if (isSolved(row, col)) {
+  int r, c;
+  if (!nextEmptyPosition(r, c)) {
     return true;
   }
   for (int i = 1; i <= 9; i++) {
-    if (validAssignment(row, col, i)) {
-      grid[row][col] = i;
+    if (validAssignment(r, c, i)) {
+        grid[r][c] = i;
       if (solve()) {
         return true;
       }
-      grid[row][col] = 0;
+      grid[r][c] = 0;
     }
   }
   return false;

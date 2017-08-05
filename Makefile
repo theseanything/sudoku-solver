@@ -1,10 +1,10 @@
 SRCDIR=src
-BUILDDIR =build
+BUILDDIR=build
 TARGETDIR=bin
 CC=g++
 CFLAGS=-c -Wall -std=c++0x
-LDFLAGS=
-SOURCES=main.cpp grid.cpp csv.cpp
+LDFLAGS=-I /usr/local/include -I /usr/local/lib
+SOURCES=main.cpp grid.cpp
 OBJECTS=$(SOURCES:%.cpp=$(BUILDDIR)/%.o)
 
 EXECUTABLE=main
